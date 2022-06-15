@@ -1,0 +1,139 @@
+<!doctype html>
+<html class="no-js" lang="">
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://testapi.siemprepago.com/v1/Scripts/PWCheckoutNoModal.js?key=S5LXUJ3xK-P688dVUGM_42_I56ONV7HQ" type="text/javascript"></script>
+  
+</head>
+    <body>
+        <div id="iframeDiv" style="height: 410px; width: 300px; margin: auto;"></div>
+        <form id="commerce_form">
+            <input id="PWToken" type="hidden" />
+        </form>
+    </body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        PWCheckout.SetProperties( 
+            { 
+            //"image": "https://logodix.com/logo/1931235.png", //aca va el logo si no se manda el dato image queda por defecto el logo de bamboo
+            "image": "https://logodix.com.net",
+            "name": "Comercio Prueba", 
+            "email": "testleandro@bamboopayment.com",
+            "email_hide": "false",
+            //"button_label": "Pagar #monto#",
+            "description": "",
+            "currency": "UYU", 
+            "amount": 999.99, 
+            "form_id": "commerce_form", 
+            "checkout_card": "0", 
+            "autoSubmit": "true",
+            "iframeId": "custom_iframe"
+            } 
+        );
+        PWCheckout.SetStyle(
+             {
+            "backgroundColor": "f2f2f2",
+            "buttonColor": "555555",
+            "buttonHoverColor": "777777",
+            "buttonTextColor": "ffffff",
+            "buttonTextHoverColor": "ffffff",
+            "inputBackgroundColor": "ffffff",
+            "inputTextColor": "767676",
+            "inputErrorColor": "ff0000",
+            "inputAddonBackgroundColor": "ffffff",
+            "labelColor": "494949"
+             }
+         );
+           var tiempo= new Date();
+         console.log("comienza open iframe custom"+ tiempo.getHours() + ':' + tiempo.getMinutes() + ':' + tiempo.getSeconds() + ':' + tiempo.getMilliseconds());
+         OpenIframe();
+        //abrirIframeParaRedFisica();
+        //Me suscribo a los eventos generados por la liberia Javascript
+        //Cuando el token se genera
+        PWCheckout.Bind("tokenCreated", onTokenCreated);
+        //Cuando se abre el Iframe
+        PWCheckout.Bind("opened", onIframeOpen);
+        //Cuando se abre el Iframe
+        PWCheckout.Bind("closed", onIframeClosed);
+   
+                
+        function onTokenCreated(token){
+            //Log del objeto Token recibido a modo de ejemplo
+            console.log(JSON.stringify(token));
+            var iframeDiv = $("#iframeDiv");
+            iframeDiv.hide();
+            PWCheckout.Iframe.Closed();
+        }
+        function onIframeOpen(){
+            console.log("El iframe se abrió");
+        }
+        
+        function onIframeClosed(){
+            console.log("El iframe se cerro");
+        }
+         function OpenIframe() {
+           var tiempo= new Date();
+            // crear el iframe, puede ser asi desde javascript o que este creado directo en el HTML
+            var main_iframe = document.createElement("iframe");
+            var iframeDiv = $("#iframeDiv");
+            main_iframe.id = "custom_iframe";
+            // Agrego iframe al div
+            iframeDiv.append(main_iframe);
+            // iframe styles
+            main_iframe.setAttribute("frameborder", "0");
+            main_iframe.style.borderRadius = "10px";
+            main_iframe.style.height = "100%";
+            main_iframe.style.width = "100%";
+            main_iframe.style.zIndex = "9999";
+            main_iframe.style.display = "block";
+            main_iframe.scrolling = "no";
+            //Abrir el Iframe para cualquier medio de pago
+            PWCheckout.LoadIframe();
+            //Abrir el Iframe para un medio de pago, ejemplo Visa
+           // PWCheckout.LoadIframe();
+ console.log("comienza open iframe custom"+ tiempo.getHours() + ':' + tiempo.getMinutes() + ':' + tiempo.getSeconds() + ':' + tiempo.getMilliseconds());
+            //Abrir el iframe para Red Fisica
+            //abrirIframeParaRedFisica();
+            
+            //Abrir el iframe para un banco determinado, el segundo numero es el banco a determinar leer documento de regresión
+            //PWCheckout.LoadIframe(1,3);
+            
+            //Abrir el iframe para un tipo de tarjeta determinado, el último valor es el tipo de tarjeta
+            //PWCheckout.LoadIframe(null,null,1)
+            
+            
+            
+            //Abrir el iframe para compra pendiente de CVV
+            //solicitoCodigoDeVerificacion();
+            //PARA CUSTOMER REGISTRADO (NO SIRVE PARA USUARIOS ANONIMOS), primero hago GET a la API para obtener el uniqueId  y luego lo uso aqui. Este valor siempre debe ser fresco para cada intento de captura
+            var UniqueId = "UI_e52afccd-376a-4c77-8a2a-e43f260dc89d";
+            //Captura para Customer sin reestriccion de medio de pago o banco
+            //PWCheckout.OpenIframeCustom("https://testapi.siemprepago.com/v1/Capture?key=S5LXUJ3xK-P688dVUGM_42_I56ONV7HQ&session_id=" + UniqueId, UniqueId);
+            
+            //Captura para Customer con reestriccion de medio de pago VISA -->
+            //
+        //PWCheckout.Iframe.OpenIframeCustomWithPaymentMediaOptions("https://testapi.siemprepago.com/v1/Capture?key=S5LXUJ3xK-P688dVUGM_42_I56ONV7HQ&session_id=" + UniqueId, UniqueId, 1);
+            
+            //Captura para Customer con reestriccion de medio de pago VISA y Banco Scotiabank-->
+            //PWCheckout.Iframe.OpenIframeCustomWithPaymentMediaOptions("https://testapi.siemprepago.com/v1/Capture?key=S5LXUJ3xK-P688dVUGM_42_I56ONV7HQ&session_id=" + UniqueId, UniqueId, 1, 5);
+            //Captura para Customer con reestriccion de Banco Scotiabank
+            //PWCheckout.Iframe.OpenIframeCustomWithPaymentMediaOptions("https://testapi.siemprepago.com/v1/Capture?key=S5LXUJ3xK-P688dVUGM_42_I56ONV7HQ&session_id=" + UniqueId, UniqueId, null, 5);
+            
+            //Captura para Customer con reestriccion de medio de pago VISA, Banco Scotiabank y Tipo de tarjeta Credito -->
+            //PWCheckout.Iframe.OpenIframeCustomWithPaymentMediaOptions("https://testapi.siemprepago.com/v1/Capture?key=S5LXUJ3xK-P688dVUGM_42_I56ONV7HQ&session_id=" + UniqueId, UniqueId, 1, 5, 1);
+        }
+        function abrirIframeParaRedFisica(){
+            //Redpagos
+            PWCheckout.GetCustomToken(10, "unmail@prueba.com", "12345672");
+            
+            //Abitab
+            //PWCheckout.GetCustomToken(5, "unmail@prueba.com", "12345672");
+         }
+         function solicitoCodigoDeVerificacion(){
+            PWCheckout.PWCapture("URL obtenida por compras de tarjeta que quede en estado pendiente por cvv el cual retorna una URL");
+         }
+    </script>
+</html>
